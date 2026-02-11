@@ -21,7 +21,7 @@ const HomePage = () => {
   const [item, setItem] = useState('');
   const [history, setHistory] = useState<string[]>([]);
 
-  const [pulls, setPulls] = useState(10);
+  const [pulls, setPulls] = useState(100);
 
   function pullFromList(list: string[]) {
     const selectedIndex = Math.floor(Math.random() * list.length);
@@ -52,15 +52,34 @@ const HomePage = () => {
 
   return (
     <main className="flex flex-col items-center justify-center gap-16 py-16 sm:min-h-screen sm:flex-row">
-      <section className="flex flex-col">
-        <span>5★ - 2%</span>
-        <span>4★ - 8%</span>
-        <span>3★ - 15%</span>
-        <span>2★ - 25%</span>
-        <span>1★ - 50%</span>
+      <section className="flex flex-col gap-2">
+        <div className="flex w-36 justify-between border border-zinc-700 bg-yellow-900 px-2">
+          <span>5★</span>
+          <span>2%</span>
+        </div>
+        <div className="flex w-36 justify-between border border-zinc-700 bg-purple-900 px-2">
+          <span>4★</span>
+          <span>8%</span>
+        </div>
+        <div className="flex w-36 justify-between border border-zinc-700 bg-blue-900 px-2">
+          <span>3★</span>
+          <span>15%</span>
+        </div>
+        <div className="flex w-36 justify-between border border-zinc-700 bg-green-900 px-2">
+          <span>2★</span>
+          <span>25%</span>
+        </div>
+        <div className="flex w-36 justify-between border border-zinc-700 bg-gray-900 px-2">
+          <span>1★</span>
+          <span>50%</span>
+        </div>
       </section>
       <section className="flex flex-col gap-2">
-        <h2 className="text-center text-5xl">{item}</h2>
+        <h2
+          className={`${item === '5★' && 'text-yellow-600'} ${item === '4★' && 'text-purple-600'} ${item === '3★' && 'text-blue-600'} ${item === '2★' && 'text-green-600'} ${item === '1★' && 'text-gray-600'} text-center text-5xl`}
+        >
+          {item}
+        </h2>
         <button
           onClick={pullItem}
           className={`${pulls === 0 ? 'bg-red-900 hover:bg-red-700' : 'hover:bg-zinc-800'} w-24 border border-zinc-700 px-2 text-sm hover:cursor-pointer`}
@@ -73,7 +92,12 @@ const HomePage = () => {
         <h2 className="font-bold">History</h2>
         <ul className="text-center">
           {history.map((item, i) => (
-            <li key={`${item}-${i}`}>{item}</li>
+            <li
+              key={`${item}-${i}`}
+              className={`${item === '5★' && 'text-yellow-600'} ${item === '4★' && 'text-purple-600'} ${item === '3★' && 'text-blue-600'} ${item === '2★' && 'text-green-600'} ${item === '1★' && 'text-gray-600'}`}
+            >
+              {item}
+            </li>
           ))}
         </ul>
       </section>
