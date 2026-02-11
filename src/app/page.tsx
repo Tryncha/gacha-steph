@@ -51,7 +51,7 @@ const HomePage = () => {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center gap-16">
+    <main className="flex flex-col items-center justify-center gap-16 py-16 sm:min-h-screen sm:flex-row">
       <section className="flex flex-col">
         <span>5★ - 2%</span>
         <span>4★ - 8%</span>
