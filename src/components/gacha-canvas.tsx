@@ -65,9 +65,9 @@ const GachaCanvas = () => {
 
       <OrbitControls
         // autoRotate
-        // enablePan
-        // enableZoom
-        // enableRotate
+        enablePan={false}
+        enableZoom={false}
+        enableRotate={false}
         minDistance={2}
         maxDistance={30}
         maxPolarAngle={Math.PI / 1.8}
