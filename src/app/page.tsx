@@ -1,90 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client';
 
-import { Suspense, useRef, useState } from 'react';
+import * as THREE from 'three';
+import { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, ContactShadows, Html } from '@react-three/drei';
-import * as THREE from 'three';
 
-function Model({ onButtonPress }: { onButtonPress: () => void }) {
+const Model = () => {
   const { scene } = useGLTF('/miau.glb');
   const groupRef = useRef<THREE.Group>(null);
 
-  // Animation state
-  const anim = useRef({
-    active: false,
-    t: 0
-  });
-
-  useFrame((_, delta) => {
+  useFrame(({ mouse }) => {
     if (!groupRef.current) return;
 
-    // Idle float
-    if (!anim.current.active) {
-      groupRef.current.position.y = Math.sin(Date.now() * 0.001 * 0.8) * 0.05;
-      return;
-    }
-
-    // Dispense animation: shake + bounce
-    anim.current.t += delta * 3;
-    const t = anim.current.t;
-
-    if (t < Math.PI * 2) {
-      // Shake horizontally
-      groupRef.current.position.x = Math.sin(t * 6) * 0.06 * Math.max(0, 1 - t / (Math.PI * 2));
-      // Bounce down then up
-      groupRef.current.position.y = -0.5 + Math.abs(Math.sin(t * 2)) * 0.15 * Math.max(0, 1 - t / (Math.PI * 2));
-      // Slight tilt
-      groupRef.current.rotation.z = Math.sin(t * 5) * 0.04 * Math.max(0, 1 - t / (Math.PI * 2));
-    } else {
-      // Reset
-      groupRef.current.position.set(0, 0, 0);
-      groupRef.current.rotation.z = 0;
-      anim.current.active = false;
-      anim.current.t = 0;
-    }
+    groupRef.current.rotation.y = mouse.x * 0.01;
+    groupRef.current.rotation.x = -mouse.y * 0.01;
   });
-
-  const handleClick = (e: any) => {
-    e.stopPropagation();
-    const clickedName = e.object?.name;
-
-    if (clickedName === 'Cube011') {
-      console.log('🎰 Cube.011 presionado — dispensando gachapon...');
-      console.log('🕐 Timestamp:', new Date().toISOString());
-      console.log('📦 Objeto clickeado:', e.object);
-
-      // Trigger animation
-      if (!anim.current.active) {
-        anim.current.active = true;
-        anim.current.t = 0;
-        onButtonPress();
-      }
-    }
-  };
 
   return (
     <primitive
       ref={groupRef}
       object={scene}
       scale={1}
-      position={[0, 0, 0]}
-      onClick={handleClick}
-      onPointerOver={(e: any) => {
-        e.stopPropagation();
-        if (e.object?.name === 'Cube.011') {
-          document.body.style.cursor = 'pointer';
-        }
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = 'auto';
-      }}
+      position={[0, -4, -1.8]}
     />
   );
-}
+};
 
-function Loader() {
+const Loader = () => {
   return (
     <Html center>
       <div
@@ -107,23 +49,14 @@ function Loader() {
             animation: 'spin 1s linear infinite'
           }}
         />
-        <p style={{ fontSize: '11px', letterSpacing: '0.3em', margin: 0, opacity: 0.7 }}>LOADING MODEL...</p>
+        <p style={{ fontSize: '11px', letterSpacing: '0.3em', margin: 0, opacity: 0.7 }}>CARGANDO...</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     </Html>
   );
-}
+};
 
-export default function Home() {
-  const [autoRotate, setAutoRotate] = useState(false);
-  const [showFlash, setShowFlash] = useState(false);
-
-  const handleButtonPress = () => {
-    setShowFlash(true);
-    setTimeout(() => setShowFlash(false), 600);
-    setAutoRotate(false);
-  };
-
+const Home = () => {
   return (
     <main
       style={{
@@ -144,13 +77,12 @@ export default function Home() {
           zIndex: 30,
           background: 'rgba(255,110,180,0.12)',
           pointerEvents: 'none',
-          opacity: showFlash ? 1 : 0,
           transition: 'opacity 0.6s ease-out'
         }}
       />
 
       {/* Background */}
-      {/* <div
+      <div
         style={{
           position: 'absolute',
           inset: 0,
@@ -184,10 +116,10 @@ export default function Home() {
           filter: 'blur(100px)',
           pointerEvents: 'none'
         }}
-      /> */}
+      />
 
       <Canvas
-        camera={{ position: [360, 40, 96], fov: 45 }}
+        camera={{ position: [600, 100, 0], fov: 45 }}
         style={{ position: 'absolute', inset: 0 }}
         shadows
       >
@@ -208,8 +140,9 @@ export default function Home() {
           intensity={0.5}
           color="#7850ff"
         />
+
         <Suspense fallback={<Loader />}>
-          <Model onButtonPress={handleButtonPress} />
+          <Model />
           <ContactShadows
             position={[0, -0.55, 0]}
             opacity={0.5}
@@ -220,47 +153,20 @@ export default function Home() {
           />
           <Environment preset="city" />
         </Suspense>
+
         <OrbitControls
-          autoRotate={autoRotate}
-          autoRotateSpeed={1.5}
+          enableRotate={false} // Controls camera rotation
+          enableZoom={false} // Controls camera zoom
+          enablePan={false} // Controls camera movement
           enableDamping
           dampingFactor={0.05}
           minDistance={2}
-          maxDistance={96}
+          maxDistance={30}
           maxPolarAngle={Math.PI / 1.8}
-          onStart={() => setAutoRotate(false)}
         />
       </Canvas>
-
-      {/* Bottom controls */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '28px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 10,
-          display: 'flex',
-          gap: '10px'
-        }}
-      >
-        <button
-          onClick={() => setAutoRotate((v) => !v)}
-          style={{
-            background: 'rgba(255,110,180,0.1)',
-            border: '0.5px solid rgba(255,110,180,0.3)',
-            borderRadius: '999px',
-            color: autoRotate ? '#ff6eb4' : 'rgba(255,255,255,0.3)',
-            fontSize: '10px',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            padding: '8px 20px',
-            cursor: 'pointer'
-          }}
-        >
-          {autoRotate ? '◉ AUTO-ROTAR ON' : '○ AUTO-ROTAR OFF'}
-        </button>
-      </div>
     </main>
   );
-}
+};
+
+export default Home;
