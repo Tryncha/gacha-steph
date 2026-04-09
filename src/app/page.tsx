@@ -56,21 +56,14 @@ const Loader = () => {
   );
 };
 
-const Home = () => {
+const HomePage = () => {
   return (
     <main
-      style={{
-        width: '100vw',
-        height: '100vh',
-        background: '#0e0a14',
-        position: 'relative',
-        overflow: 'hidden',
-        fontFamily: 'monospace',
-        userSelect: 'none'
-      }}
+      style={{ backgroundColor: '#0e0a14' }}
+      className="relative flex min-h-screen min-w-screen items-center justify-center select-none"
     >
       {/* Flash overlay on button press */}
-      <div
+      {/* <div
         style={{
           position: 'absolute',
           inset: 0,
@@ -79,10 +72,10 @@ const Home = () => {
           pointerEvents: 'none',
           transition: 'opacity 0.6s ease-out'
         }}
-      />
+      /> */}
 
       {/* Background */}
-      <div
+      {/* <div
         style={{
           position: 'absolute',
           inset: 0,
@@ -116,11 +109,11 @@ const Home = () => {
           filter: 'blur(100px)',
           pointerEvents: 'none'
         }}
-      />
+      /> */}
 
       <Canvas
         camera={{ position: [600, 100, 0], fov: 45 }}
-        style={{ position: 'absolute', inset: 0 }}
+        style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         shadows
       >
         <ambientLight intensity={0.4} />
@@ -165,8 +158,18 @@ const Home = () => {
           maxPolarAngle={Math.PI / 1.8}
         />
       </Canvas>
+
+      <section
+        // style={{ padding: '20px' }}
+        className="pointer-events-none absolute z-10 flex flex-col items-center bg-rose-50 p-5"
+      >
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit magnam non rem veniam at consequatur
+        ullam reiciendis animi incidunt nam eius nesciunt ab, corrupti voluptatibus itaque neque asperiores voluptates
+        quos laborum accusamus sed ex iusto dolore! Cupiditate sapiente harum, mollitia consectetur aspernatur cumque
+        corporis reiciendis nostrum. Blanditiis facere praesentium quia?
+      </section>
     </main>
   );
 };
 
-export default Home;
+export default HomePage;
