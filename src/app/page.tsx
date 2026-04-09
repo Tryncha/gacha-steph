@@ -8,7 +8,7 @@ import { useGLTF, OrbitControls, Environment, ContactShadows, Html } from '@reac
 import * as THREE from 'three';
 
 function Model({ onButtonPress }: { onButtonPress: () => void }) {
-  const { scene } = useGLTF('/gachapon.glb');
+  const { scene } = useGLTF('/gachapon-optimized.glb');
   const groupRef = useRef<THREE.Group>(null);
 
   // Animation state
