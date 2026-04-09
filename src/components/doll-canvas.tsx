@@ -22,7 +22,7 @@ const DollCanvas = () => {
   return (
     <Canvas
       camera={{ position: [600, 100, 0], fov: 45 }}
-      style={{ position: 'absolute', right: 600, zIndex: -10, pointerEvents: 'none' }}
+      style={{ position: 'absolute', right: 600, zIndex: 10 }}
       shadows
     >
       <ambientLight intensity={0.4} />
@@ -59,6 +59,9 @@ const DollCanvas = () => {
       <OrbitControls
         autoRotate
         autoRotateSpeed={2.5}
+        enablePan={false}
+        enableZoom={true}
+        enableRotate={true}
         minDistance={2}
         maxDistance={30}
         maxPolarAngle={Math.PI / 1.8}
