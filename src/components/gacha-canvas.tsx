@@ -5,7 +5,7 @@ import { useGLTF, OrbitControls, Environment, ContactShadows } from '@react-thre
 import Loader from '../components/loader';
 
 const GachaModel = () => {
-  const { scene } = useGLTF('/miau.glb');
+  const { scene } = useGLTF('/renders/gacha.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
   useFrame(({ mouse }) => {
@@ -20,7 +20,7 @@ const GachaModel = () => {
       ref={gachaRef}
       object={scene}
       scale={1}
-      position={[0, -3.75, -6]}
+      position={[1.5, -2.8, -6]}
     />
   );
 };
@@ -64,12 +64,11 @@ const GachaCanvas = () => {
       </Suspense>
 
       <OrbitControls
-        // autoRotate
-        enablePan={false}
-        enableZoom={false}
-        enableRotate={false}
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
         minDistance={2}
-        maxDistance={30}
+        maxDistance={34}
         maxPolarAngle={Math.PI / 1.8}
       />
     </Canvas>

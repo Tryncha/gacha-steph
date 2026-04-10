@@ -5,14 +5,14 @@ import { useGLTF, OrbitControls, Environment, ContactShadows } from '@react-thre
 import Loader from '../components/loader';
 
 const DollModel = () => {
-  const { scene } = useGLTF('/doll.glb');
+  const { scene } = useGLTF('/renders/doll.glb');
   const dollRef = useRef<THREE.Group>(null);
 
   return (
     <primitive
       ref={dollRef}
       object={scene}
-      scale={16}
+      scale={1}
       position={[0, 0, 0]}
     />
   );
@@ -22,7 +22,7 @@ const DollCanvas = () => {
   return (
     <Canvas
       camera={{ position: [600, 100, 0], fov: 45 }}
-      style={{ position: 'absolute', right: 600, zIndex: 10 }}
+      style={{ position: 'absolute', right: 600, zIndex: -10 }}
       shadows
     >
       <ambientLight intensity={0.4} />
@@ -57,13 +57,13 @@ const DollCanvas = () => {
       </Suspense>
 
       <OrbitControls
-        autoRotate
-        autoRotateSpeed={2.5}
-        enablePan={false}
+        enablePan={true}
         enableZoom={true}
         enableRotate={true}
+        autoRotate
+        autoRotateSpeed={2.5}
         minDistance={2}
-        maxDistance={30}
+        maxDistance={32}
         maxPolarAngle={Math.PI / 1.8}
       />
     </Canvas>
