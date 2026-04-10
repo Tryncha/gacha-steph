@@ -1,16 +1,59 @@
 import * as THREE from 'three';
-import { useRef, Suspense } from 'react';
+import { useRef, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+import { useGLTF, OrbitControls, Environment, ContactShadows, useTexture } from '@react-three/drei';
 import Loader from '../components/loader';
 
 const GachaModel = () => {
-  const { scene } = useGLTF('/renders/gacha.glb');
+  const { scene } = useGLTF('/renders/GACHAFINAL.glb');
   const gachaRef = useRef<THREE.Group>(null);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const texturesData = [
+    { childName: 'cajas_del_gacha01', texture: useTexture('/prizes/alas.png') },
+    { childName: 'cajas_del_gacha002', texture: useTexture('/prizes/blusa.png') },
+    { childName: 'cajas_del_gacha003', texture: useTexture('/prizes/botas.png') },
+    { childName: 'cajas_del_gacha004', texture: useTexture('/prizes/collar.png') },
+    { childName: 'cajas_del_gacha005', texture: useTexture('/prizes/correa.png') },
+    { childName: 'cajas_del_gacha006', texture: useTexture('/prizes/falda.png') },
+    { childName: 'cajas_del_gacha007', texture: useTexture('/prizes/fursona.png') },
+    { childName: 'cajas_del_gacha008', texture: useTexture('/prizes/medias.png') },
+    { childName: 'cajas_del_gacha009', texture: useTexture('/prizes/paticas.png') }
+  ];
+
+  const fursonaTexture = useTexture('/holi.png');
+
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        for (const data of texturesData) {
+          if (child.name === data.childName) {
+            if (data.childName === 'cajas_del_gacha003') {
+              data.texture.repeat.set(0.667, 1);
+              data.texture.offset.set(0.167, 0);
+            } else {
+              // Ratio del objeto: 1:1 (cuadrado)
+              // Ratio de la imagen: 2528/1684 ≈ 1.5 (más ancha que alta)
+              // Entonces en Y la imagen ocupa solo 1/1.5 ≈ 0.667 del espacio
+              data.texture.repeat.set(1, 0.667);
+              data.texture.offset.set(0, 0.167);
+            }
+
+            child.material = new THREE.MeshStandardMaterial({ map: data.texture });
+            child.material.needsUpdate = true;
+          }
+        }
+
+        if (child.name === 'foto_fursona') {
+          child.material = new THREE.MeshStandardMaterial({ map: fursonaTexture });
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+  }, [scene, texturesData, fursonaTexture]);
 
   useFrame(({ mouse }) => {
     if (!gachaRef.current) return;
-
     gachaRef.current.rotation.y = mouse.x * 0.01;
     gachaRef.current.rotation.x = -mouse.y * 0.01;
   });
@@ -64,9 +107,9 @@ const GachaCanvas = () => {
       </Suspense>
 
       <OrbitControls
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
+        enablePan={false}
+        enableZoom={false}
+        enableRotate={false}
         minDistance={2}
         maxDistance={34}
         maxPolarAngle={Math.PI / 1.8}
