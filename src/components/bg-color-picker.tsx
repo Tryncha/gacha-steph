@@ -1,8 +1,10 @@
+'use client';
+
 import { useEffect, useId, useState } from 'react';
 
 const BgColorPicker = () => {
   const inputId = useId();
-  const [bgColor, setBgColor] = useState('#032e15');
+  const [bgColor, setBgColor] = useState('#431164');
 
   useEffect(() => {
     document.body.style.backgroundColor = bgColor;

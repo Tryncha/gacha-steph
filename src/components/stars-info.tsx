@@ -1,16 +1,21 @@
-import { useStars } from '../context/stars-context';
+'use client';
+
+import { useGacha } from '../context/gacha-context';
+import { berkyFont } from '../fonts/fonts';
 
 const StarsInfo = () => {
-  const { stars, addStars } = useStars();
+  const { stars, addStars } = useGacha();
 
   return (
-    <div className="absolute top-0 right-0 z-10 flex items-center gap-2 bg-rose-50">
-      <span className="text-xl font-bold text-yellow-800">{stars}</span>
+    <div className="absolute top-2 right-2 z-10 flex w-28 flex-col gap-2">
+      <span className={`${berkyFont.className} rounded-md bg-rose-200 p-2 pb-1 text-center text-5xl text-yellow-700`}>
+        {stars}
+      </span>
       <button
         onClick={() => addStars(70)}
-        className="text-xl hover:cursor-pointer"
+        className={`${berkyFont.className} flex items-center justify-center rounded-md border border-rose-900 bg-rose-200 px-2 text-xl text-yellow-900 transition-colors hover:cursor-pointer hover:bg-rose-300`}
       >
-        +
+        Add stars
       </button>
     </div>
   );
