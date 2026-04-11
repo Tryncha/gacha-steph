@@ -25,7 +25,7 @@ const DollCanvas = () => {
       style={{ position: 'absolute', right: 600, zIndex: -10 }}
       shadows
     >
-      <ambientLight intensity={0.4} />
+      {/* <ambientLight intensity={0.4} />
       <directionalLight
         position={[5, 8, 5]}
         intensity={1.5}
@@ -41,7 +41,7 @@ const DollCanvas = () => {
         position={[3, 1, 3]}
         intensity={0.5}
         color="#7850ff"
-      />
+      /> */}
 
       <Suspense fallback={<Loader />}>
         <DollModel />
@@ -53,7 +53,8 @@ const DollCanvas = () => {
           far={1}
           color="#ff6eb4"
         />
-        <Environment preset="city" />
+        {/* <Environment preset="city" /> */}
+        <Environment files="/lighting/docklands_01_4k.exr" />
       </Suspense>
 
       <OrbitControls

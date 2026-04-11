@@ -1,69 +1,148 @@
 import * as THREE from 'three';
-import { useRef, Suspense, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, Environment, ContactShadows, useTexture } from '@react-three/drei';
+import { useRef, Suspense, useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { useGLTF, OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import Loader from '../components/loader';
+import { useGachaEvents } from '../hooks/use-gacha-events';
+import { useStars } from '../context/stars-context';
+import { BIG_BOX_ID, BOXES_IDS, GACHA_LOOPS, PRIZES_IDS, WISH_BUTTON_ID } from '../lib/constants';
+import { addDelay, calcRandomInt } from '../lib/utils';
 
 const GachaModel = () => {
-  const { scene } = useGLTF('/renders/GACHAFINAL.glb');
+  const { scene } = useGLTF('/renders/dios.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const texturesData = [
-    { childName: 'cajas_del_gacha01', texture: useTexture('/prizes/alas.png') },
-    { childName: 'cajas_del_gacha002', texture: useTexture('/prizes/blusa.png') },
-    { childName: 'cajas_del_gacha003', texture: useTexture('/prizes/botas.png') },
-    { childName: 'cajas_del_gacha004', texture: useTexture('/prizes/collar.png') },
-    { childName: 'cajas_del_gacha005', texture: useTexture('/prizes/correa.png') },
-    { childName: 'cajas_del_gacha006', texture: useTexture('/prizes/falda.png') },
-    { childName: 'cajas_del_gacha007', texture: useTexture('/prizes/fursona.png') },
-    { childName: 'cajas_del_gacha008', texture: useTexture('/prizes/medias.png') },
-    { childName: 'cajas_del_gacha009', texture: useTexture('/prizes/paticas.png') }
-  ];
+  const { stars, spendStars } = useStars();
+  const [activeBoxes, setActiveBoxes] = useState<string[]>([]);
 
-  const fursonaTexture = useTexture('/holi.png');
+  useGachaEvents(scene, gachaRef);
 
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        for (const data of texturesData) {
-          if (child.name === data.childName) {
-            if (data.childName === 'cajas_del_gacha003') {
-              data.texture.repeat.set(0.667, 1);
-              data.texture.offset.set(0.167, 0);
+        // Function creation for each box
+        for (let i = 0; i < BOXES_IDS.length; i++) {
+          if (child.name === BOXES_IDS[i]) {
+            if (activeBoxes.includes(child.name)) {
+              child.material.emissive = new THREE.Color('#ff6eb4');
+              child.material.emissiveIntensity = 1.5;
             } else {
-              // Ratio del objeto: 1:1 (cuadrado)
-              // Ratio de la imagen: 2528/1684 ≈ 1.5 (más ancha que alta)
-              // Entonces en Y la imagen ocupa solo 1/1.5 ≈ 0.667 del espacio
-              data.texture.repeat.set(1, 0.667);
-              data.texture.offset.set(0, 0.167);
+              child.material.emissive = new THREE.Color('#000000');
+              child.material.emissiveIntensity = 0;
             }
-
-            child.material = new THREE.MeshStandardMaterial({ map: data.texture });
             child.material.needsUpdate = true;
           }
         }
-
-        if (child.name === 'foto_fursona') {
-          child.material = new THREE.MeshStandardMaterial({ map: fursonaTexture });
+        if (child.name === BIG_BOX_ID) {
+          if (activeBoxes.includes(child.name)) {
+            child.material.emissive = new THREE.Color('#ff6eb4');
+            child.material.emissiveIntensity = 1.5;
+          } else {
+            child.material.emissive = new THREE.Color('#000000');
+            child.material.emissiveIntensity = 0;
+          }
           child.material.needsUpdate = true;
         }
       }
     });
-  }, [scene, texturesData, fursonaTexture]);
+  }, [scene, activeBoxes]);
 
-  useFrame(({ mouse }) => {
-    if (!gachaRef.current) return;
-    gachaRef.current.rotation.y = mouse.x * 0.01;
-    gachaRef.current.rotation.x = -mouse.y * 0.01;
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function handleClick(e: any) {
+    // For checking objects names
+    console.log(e.object.name);
+
+    // Function creation for each box
+    // for (let i = 0; i < BOXES_IDS.length; i++) {
+    //   if (e.object.name === BOXES_IDS[i]) {
+    //     if (!activeBoxes.includes(BOXES_IDS[i])) {
+    //       setActiveBoxes(activeBoxes.concat(BOXES_IDS[i]));
+    //     } else {
+    //       setActiveBoxes(activeBoxes.filter((boxId) => boxId !== BOXES_IDS[i]));
+    //     }
+    //   }
+    // }
+
+    // if (e.object.name === BIG_BOX_ID) {
+    //   if (!activeBoxes.includes(BIG_BOX_ID)) {
+    //     setActiveBoxes(activeBoxes.concat(BIG_BOX_ID));
+    //   } else {
+    //     setActiveBoxes(activeBoxes.filter((boxId) => boxId !== BIG_BOX_ID));
+    //   }
+    // }
+
+    async function wish() {
+      setActiveBoxes([]);
+
+      let winnerIndex: number = 0;
+
+      for (let i = 0; i < GACHA_LOOPS; i++) {
+        const randomIndex = calcRandomInt(0, BOXES_IDS.length);
+
+        console.log(`Loop #${i + 1}: randomIndex = ${randomIndex}`);
+
+        setActiveBoxes([]);
+        await addDelay(200);
+
+        setActiveBoxes(activeBoxes.concat(BOXES_IDS[randomIndex]));
+        await addDelay(200);
+
+        if (i === GACHA_LOOPS - 1) {
+          winnerIndex = randomIndex;
+        }
+      }
+
+      console.log(`You won: ${PRIZES_IDS[winnerIndex]}!!`);
+    }
+
+    if (e.object.name === WISH_BUTTON_ID) {
+      if (stars >= 70) {
+        spendStars(70);
+        await wish();
+      } else {
+        console.log('Not enough stars :c');
+      }
+    }
+
+    // Code for multiple wishes
+    // Pending for check
+
+    // if (e.object.name === 'Cube011') {
+    //   if (stars >= 70) {
+    //     spendStars(70);
+
+    //     for (let i = 0; i < GACHA_LOOPS; i++) {
+    //       const randomIndexes = [
+    //         calcRandomInt(0, BOXES_IDS.length),
+    //         calcRandomInt(0, BOXES_IDS.length),
+    //         calcRandomInt(0, BOXES_IDS.length)
+    //       ];
+
+    //       console.log(
+    //         `Loop #${i + 1}: randomIndexes = [${randomIndexes[0]}, ${randomIndexes[1]}, ${randomIndexes[2]}]`
+    //       );
+
+    //       setActiveBoxes(
+    //         activeBoxes.concat([BOXES_IDS[randomIndexes[0]], BOXES_IDS[randomIndexes[1]], BOXES_IDS[randomIndexes[2]]])
+    //       );
+    //       await addDelay(200);
+
+    //       setActiveBoxes([]);
+    //       await addDelay(200);
+    //     }
+    //   } else {
+    //     console.log('Not enough stars :c');
+    //   }
+    // }
+  }
 
   return (
     <primitive
       ref={gachaRef}
       object={scene}
       scale={1}
-      position={[1.5, -2.8, -6]}
+      position={[1, -2.4, -5]}
+      onClick={handleClick}
     />
   );
 };
@@ -75,7 +154,7 @@ const GachaCanvas = () => {
       style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }}
       shadows
     >
-      <ambientLight intensity={0.4} />
+      {/* <ambientLight intensity={0.4} />
       <directionalLight
         position={[5, 8, 5]}
         intensity={1.5}
@@ -91,7 +170,7 @@ const GachaCanvas = () => {
         position={[3, 1, 3]}
         intensity={0.5}
         color="#7850ff"
-      />
+      /> */}
 
       <Suspense fallback={<Loader />}>
         <GachaModel />
@@ -103,13 +182,14 @@ const GachaCanvas = () => {
           far={1}
           color="#ff6eb4"
         />
-        <Environment preset="city" />
+        {/* <Environment preset="city" /> */}
+        <Environment files="/lighting/docklands_01_4k.exr" />
       </Suspense>
 
       <OrbitControls
-        enablePan={false}
-        enableZoom={false}
-        enableRotate={false}
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
         minDistance={2}
         maxDistance={34}
         maxPolarAngle={Math.PI / 1.8}
