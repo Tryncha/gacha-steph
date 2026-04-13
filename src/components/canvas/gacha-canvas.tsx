@@ -22,9 +22,8 @@ const GachaModel = () => {
     // console.log(e.object.name);
 
     if (e.object.name === WISH_BUTTON_ID) {
+      if (isWishing) return;
       if (stars >= WISH_STAR_COST) {
-        if (isWishing) return;
-
         spendStars(WISH_STAR_COST);
         wish();
       } else {

@@ -1,43 +1,43 @@
 'use client';
 
 import * as THREE from 'three';
-import { useRef, Suspense } from 'react';
+import { useRef } from 'react';
 import { Canvas, CanvasProps } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment } from '@react-three/drei';
-import Loader from '../loader';
 import { useBunnyAnimation } from '@/src/hooks/use-model-animation';
 import { useGacha } from '@/src/context/gacha-context';
+import { prizes } from '@/src/lib/constants';
 
-const BunnyModel = () => {
-  const { winner } = useGacha();
+// Preloading of all models - just to evade a loader
+prizes.forEach((p) => useGLTF.preload(`/renders/bunnies/${p.prizeId}.glb`));
 
-  const { scene } = useGLTF(`/renders/bunnies/${winner}.glb`);
+const BunnyModel = ({ prizeId }: { prizeId: string }) => {
+  const { scene } = useGLTF(`/renders/bunnies/${prizeId}.glb`);
   const bunnyRef = useRef<THREE.Group>(null);
 
   useBunnyAnimation(bunnyRef);
 
-  if (!winner) return;
   return (
     <primitive
       ref={bunnyRef}
       object={scene}
-      position={[0, 1, 0]}
-      scale={2.4}
+      position={[0, 0, 0]}
+      scale={prizeId === 'especial' ? 1.1 : 2.4}
     />
   );
 };
 
 const BunnyCanvas = (props: CanvasProps) => {
+  const { winner } = useGacha();
+
   return (
     <Canvas
       camera={props.camera}
       style={props.style}
     >
-      <Suspense fallback={<Loader loadingText="CARGANDO BUNNY..." />}>
-        <BunnyModel />
-        <Environment files="/lighting/docklands_01_4k.exr" />
-      </Suspense>
-
+      {/* No need for <Suspense> given that all models are preloaded */}
+      {winner && <BunnyModel prizeId={winner} />}
+      <Environment files="/lighting/docklands_01_4k.exr" />
       <OrbitControls
         enablePan={false}
         enableZoom={false}

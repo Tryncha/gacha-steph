@@ -17,7 +17,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <main className="relative flex h-screen w-screen">
+    <main className="relative flex h-screen w-screen overflow-hidden">
       {/* bg-prizes */}
       <div className="absolute inset-0 -z-10 bg-[url(/images/bg-prizes.png)] bg-cover bg-center opacity-75 blur-xs" />
       <div
@@ -33,17 +33,27 @@ const HomePage = () => {
         style={{ flex: 2, zIndex: 0 }}
       />
 
-      {winner && (
-        <section
-          onClick={() => setWinner('')}
-          className="absolute inset-0 z-20 bg-black/80"
-        >
-          <BunnyCanvas
-            camera={{ position: [600, 100, 0], fov: 45 }}
-            style={{ flex: 1, zIndex: 20 }}
-          />
-        </section>
-      )}
+      <section
+        onClick={() => setWinner('')}
+        style={{ transition: 'opacity 0.5s ease, backdrop-filter 0.5s ease' }}
+        className={`${
+          winner
+            ? 'pointer-events-auto opacity-100 backdrop-blur-xs'
+            : 'pointer-events-none opacity-0 backdrop-blur-none'
+        } absolute inset-0 z-20 bg-black/70`}
+      >
+        <BunnyCanvas
+          camera={{ position: [600, 100, 0], fov: 45 }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease',
+            transform: winner ? 'scale(1)' : 'scale(0.85)',
+            pointerEvents: winner ? 'auto' : 'none',
+            opacity: winner ? 1 : 0
+          }}
+        />
+      </section>
 
       <GachaMisc />
     </main>
