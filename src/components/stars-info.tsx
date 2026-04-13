@@ -1,7 +1,7 @@
 'use client';
 
 import { useGacha } from '../context/gacha-context';
-import { berkyFont } from '../fonts/fonts';
+import { berkyFont } from '../lib/fonts';
 
 const StarsInfo = () => {
   const { stars, addStars } = useGacha();

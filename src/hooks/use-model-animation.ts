@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { RefObject, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { BIG_BOX_ID, BUNNY_OSCILLATION, PRIZES_DATA } from '../lib/constants';
+import { BUNNY_OSCILLATION, prizes } from '../lib/constants';
 
 export function useGachaAnimation(
-  activeBoxes: string[],
+  activeBox: string,
+  usedBoxes: string[],
   scene: THREE.Group<THREE.Object3DEventMap>,
   ref: RefObject<THREE.Group<THREE.Object3DEventMap> | null>
 ) {
@@ -17,31 +18,32 @@ export function useGachaAnimation(
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        for (let i = 0; i < PRIZES_DATA.length; i++) {
-          if (child.name === PRIZES_DATA[i].BOX_ID) {
-            if (activeBoxes.includes(child.name)) {
+        for (let i = 0; i < prizes.length; i++) {
+          if (child.name === prizes[i].boxId) {
+            // Active box
+            if (activeBox === child.name) {
               child.material.emissive = new THREE.Color('#ffffff');
               child.material.emissiveIntensity = 0.18;
             } else {
               child.material.emissive = new THREE.Color('#000000');
               child.material.emissiveIntensity = 0;
             }
+
+            // Used boxes
+            if (usedBoxes.includes(child.name)) {
+              child.material.emissive = new THREE.Color('#ff0000');
+              child.material.emissiveIntensity = 0.18;
+            } else {
+              child.material.emissive = new THREE.Color('#000000');
+              child.material.emissiveIntensity = 0;
+            }
+
             child.material.needsUpdate = true;
           }
         }
-        if (child.name === BIG_BOX_ID) {
-          if (activeBoxes.includes(child.name)) {
-            child.material.emissive = new THREE.Color('#ffffff');
-            child.material.emissiveIntensity = 0.18;
-          } else {
-            child.material.emissive = new THREE.Color('#000000');
-            child.material.emissiveIntensity = 0;
-          }
-          child.material.needsUpdate = true;
-        }
       }
     });
-  }, [scene, activeBoxes]);
+  }, [scene, activeBox, usedBoxes]);
 }
 
 export function useBunnyAnimation(bunnyRef: RefObject<THREE.Group<THREE.Object3DEventMap> | null>) {

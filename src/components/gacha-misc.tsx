@@ -2,9 +2,10 @@
 
 import { Info } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
-import { kiwiSoda } from '../fonts/fonts';
+import { kiwiSoda } from '../lib/fonts';
+import { prizes } from '../lib/constants';
 
-const BgColorPicker = () => {
+const GachaMisc = () => {
   const inputId = useId();
   const [bgColor, setBgColor] = useState('#431164');
   const [isHovering, setIsHovering] = useState(false);
@@ -20,7 +21,14 @@ const BgColorPicker = () => {
           className={`${kiwiSoda.className} absolute right-0.5 bottom-8 z-20 flex w-2xl flex-col gap-2 rounded-xl bg-[#d0d995] p-2 text-center text-2xl font-medium text-[#b8555b]`}
         >
           <p>¡Si obtienes el producto especial Bunny Hunter Fantasy, ganas todos los tesoros del cofre PREY MODE!</p>
-          <p>Los tesoros no se repiten; se garantizan todos en ? intentos.</p>
+          <p>Los tesoros no se repiten: se garantizan todos en 10 intentos.</p>
+          <div className="flex flex-col">
+            {prizes.map((prize) => (
+              <span key={prize.prizeId}>
+                {prize.name}: {prize.prob * 100}%
+              </span>
+            ))}
+          </div>
         </div>
       )}
       <Info
@@ -40,4 +48,4 @@ const BgColorPicker = () => {
   );
 };
 
-export default BgColorPicker;
+export default GachaMisc;

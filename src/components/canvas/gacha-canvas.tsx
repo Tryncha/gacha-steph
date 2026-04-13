@@ -13,14 +13,14 @@ const GachaModel = () => {
   const { scene } = useGLTF('/renders/gacha-render.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
-  const { stars, spendStars, activeBoxes, wish } = useGacha();
+  const { stars, spendStars, activeBox, wish, usedBoxes } = useGacha();
 
-  useGachaAnimation(activeBoxes, scene, gachaRef);
+  useGachaAnimation(activeBox, usedBoxes, scene, gachaRef);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleClick(e: any) {
     // For checking objects names
-    console.log(e.object.name);
+    // console.log(e.object.name);
 
     if (e.object.name === WISH_BUTTON_ID) {
       if (stars >= WISH_STAR_COST) {

@@ -2,13 +2,19 @@
 
 import FursonaCanvas from '../components/canvas/fursona-canvas';
 import GachaCanvas from '../components/canvas/gacha-canvas';
-import BgColorPicker from '../components/bg-color-picker';
+import GachaMisc from '../components/gacha-misc';
 import StarsInfo from '../components/stars-info';
 import { useGacha } from '../context/gacha-context';
 import BunnyCanvas from '../components/canvas/bunny-canvas';
+import { useEffect } from 'react';
+import { checkTotalProb } from '../lib/utils';
 
 const HomePage = () => {
-  const { prize, setPrize } = useGacha();
+  const { winner, setWinner } = useGacha();
+
+  useEffect(() => {
+    checkTotalProb();
+  }, []);
 
   return (
     <main className="relative flex h-screen w-screen">
@@ -24,9 +30,9 @@ const HomePage = () => {
         style={{ flex: 2, zIndex: 0 }}
       />
 
-      {prize && (
+      {winner && (
         <section
-          onClick={() => setPrize('')}
+          onClick={() => setWinner('')}
           className="absolute inset-0 z-20 bg-black/80"
         >
           <BunnyCanvas
@@ -36,7 +42,7 @@ const HomePage = () => {
         </section>
       )}
 
-      <BgColorPicker />
+      <GachaMisc />
     </main>
   );
 };

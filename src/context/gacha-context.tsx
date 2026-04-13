@@ -1,17 +1,17 @@
 'use client';
 
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
-import { MAX_STARS, PRIZES_DATA, WISH_STAR_COST } from '../lib/constants';
-import { calcRandomInt } from '../lib/utils';
+import { MAX_STARS, prizes, WISH_STAR_COST } from '../lib/constants';
 
 interface GachaContextType {
   stars: number;
   addStars: (quantity: number) => void;
   spendStars: (quantity: number) => void;
-  prize: string;
-  setPrize: Dispatch<SetStateAction<string>>;
+  winner: string;
+  setWinner: Dispatch<SetStateAction<string>>;
   wish: () => void;
-  activeBoxes: string[];
+  activeBox: string;
+  usedBoxes: string[];
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -28,8 +28,10 @@ export function useGacha() {
 
 export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [stars, setStars] = useState(WISH_STAR_COST * 3);
-  const [activeBoxes, setActiveBoxes] = useState<string[]>([]);
-  const [prize, setPrize] = useState('');
+
+  const [activeBox, setActiveBox] = useState('');
+  const [usedBoxes, setUsedBoxes] = useState<string[]>([]);
+  const [winner, setWinner] = useState('');
 
   function addStars(quantity: number) {
     if (stars + quantity > MAX_STARS) {
@@ -44,47 +46,71 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Game functions
-  function finish(winnerIdx: number) {
-    setActiveBoxes([]);
-    setPrize(PRIZES_DATA[winnerIdx].PRIZE_ID);
+  function clearBoxes() {
+    setActiveBox('');
+    setWinner('');
+  }
+
+  function pickWeighted(availableIdxs: number[]) {
+    // On last remaining animal, force it (guarantees unicorn on 10th spin)
+    if (availableIdxs.length === 1) return availableIdxs[0];
+
+    const total = availableIdxs.reduce((acc, idx) => acc + prizes[idx].prob * 100, 0);
+    let r = Math.random() * total;
+
+    for (const idx of availableIdxs) {
+      r -= prizes[idx].prob * 100;
+      if (r <= 0) return idx;
+    }
+
+    return availableIdxs[availableIdxs.length - 1];
   }
 
   function wish() {
+    console.log('Button should be disabled!');
+    clearBoxes();
+
+    const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
+    const winnerIdx = pickWeighted(availableIdxs);
+
     let speed = 80;
-    let elapsed = 0;
-    let current = -1;
+    let elapsedTime = 0;
+    let currentIdx = -1;
 
     const totalTime = 3200;
 
     function step() {
-      setActiveBoxes([]);
-      let next: number;
+      clearBoxes();
 
-      do {
-        next = calcRandomInt(0, PRIZES_DATA.length);
-      } while (next === current && elapsed < totalTime - 400);
+      // Pick random available index for animation (avoid repeating same in flash)
+      const candidateIdxs = availableIdxs.filter((idx) => idx !== currentIdx);
+      const nextIdx = candidateIdxs[Math.floor(Math.random() * candidateIdxs.length)];
+      currentIdx = nextIdx;
+      setActiveBox(prizes[currentIdx].boxId);
 
-      current = next;
-      setActiveBoxes(activeBoxes.concat(PRIZES_DATA[current].BOX_ID));
+      elapsedTime += speed;
 
-      elapsed += speed;
-
-      if (elapsed < totalTime) {
-        if (elapsed > totalTime * 0.6) {
-          speed = Math.min(speed + 18, 280);
-        }
-
+      if (elapsedTime < totalTime) {
+        if (elapsedTime > totalTime * 0.6) speed = Math.min(speed + 18, 280);
         setTimeout(step, speed);
       } else {
-        setTimeout(() => finish(current), 180);
+        setTimeout(() => finish(winnerIdx), 180);
       }
     }
 
     step();
   }
 
+  function finish(winnerIdx: number) {
+    clearBoxes();
+    setUsedBoxes(usedBoxes.concat(prizes[winnerIdx].boxId));
+    setWinner(prizes[winnerIdx].prizeId);
+  }
+
+  console.log(activeBox);
+
   return (
-    <GachaContext.Provider value={{ stars, prize, addStars, setPrize, spendStars, wish, activeBoxes }}>
+    <GachaContext.Provider value={{ stars, winner, addStars, setWinner, spendStars, wish, activeBox, usedBoxes }}>
       {children}
     </GachaContext.Provider>
   );

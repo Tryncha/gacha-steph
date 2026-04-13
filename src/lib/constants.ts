@@ -1,16 +1,68 @@
-export const PRIZES_DATA = [
-  { BOX_ID: 'cajas_del_gacha01', PRIZE_ID: 'medias' },
-  { BOX_ID: 'cajas_del_gacha006', PRIZE_ID: 'falda' },
-  { BOX_ID: 'cajas_del_gacha010', PRIZE_ID: 'correa' },
-  { BOX_ID: 'cajas_del_gacha003', PRIZE_ID: 'botas' },
-  { BOX_ID: 'cajas_del_gacha004', PRIZE_ID: 'alas' },
-  { BOX_ID: 'cajas_del_gacha002', PRIZE_ID: 'collar' },
-  { BOX_ID: 'cajas_del_gacha005', PRIZE_ID: 'paticas' },
-  { BOX_ID: 'cajas_del_gacha007', PRIZE_ID: 'blusa' },
-  { BOX_ID: 'cajas_del_gacha009', PRIZE_ID: 'cabeza' }
+import { Prize } from '../types';
+
+export const prizes: Prize[] = [
+  {
+    name: 'Medias',
+    prizeId: 'medias',
+    boxId: 'cajas_del_gacha01',
+    prob: 0.18
+  },
+  {
+    name: 'Falda',
+    prizeId: 'falda',
+    boxId: 'cajas_del_gacha006',
+    prob: 0.15
+  },
+  {
+    name: 'Correa',
+    prizeId: 'correa',
+    boxId: 'cajas_del_gacha010',
+    prob: 0.12
+  },
+  {
+    name: 'Botas',
+    prizeId: 'botas',
+    boxId: 'cajas_del_gacha003',
+    prob: 0.12
+  },
+  {
+    name: 'Alas',
+    prizeId: 'alas',
+    boxId: 'cajas_del_gacha004',
+    prob: 0.12
+  },
+  {
+    name: 'Collar',
+    prizeId: 'collar',
+    boxId: 'cajas_del_gacha002',
+    prob: 0.1
+  },
+  {
+    name: 'Paticas',
+    prizeId: 'paticas',
+    boxId: 'cajas_del_gacha005',
+    prob: 0.1
+  },
+  {
+    name: 'Blusa',
+    prizeId: 'blusa',
+    boxId: 'cajas_del_gacha007',
+    prob: 0.05
+  },
+  {
+    name: 'Cabeza',
+    prizeId: 'cabeza',
+    boxId: 'cajas_del_gacha009',
+    prob: 0.05
+  },
+  {
+    name: 'Especial',
+    prizeId: 'especial',
+    boxId: 'Cube001',
+    prob: 0.01
+  }
 ];
 
-export const BIG_BOX_ID = 'Cube';
 export const WISH_BUTTON_ID = 'Cube011';
 
 export const GACHA_LOOPS = 10;
