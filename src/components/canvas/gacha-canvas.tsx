@@ -37,7 +37,7 @@ const GachaModel = () => {
       ref={gachaRef}
       object={scene}
       onClick={handleClick}
-      position={[1, -2.4, 2]}
+      position={[1, -2.4, 52]}
       scale={1}
     />
   );
