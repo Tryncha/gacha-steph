@@ -73,6 +73,9 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
     const winnerIdx = pickWeighted(availableIdxs);
 
+    console.log('availableIdxs: ', availableIdxs);
+    console.log('winnerIdx: ', winnerIdx);
+
     let speed = 80;
     let elapsedTime = 0;
     let currentIdx = -1;
@@ -107,7 +110,8 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     setWinner(prizes[winnerIdx].prizeId);
   }
 
-  console.log(activeBox);
+  console.log('activeBox: ', activeBox);
+  console.log('winner: ', winner);
 
   return (
     <GachaContext.Provider value={{ stars, winner, addStars, setWinner, spendStars, wish, activeBox, usedBoxes }}>

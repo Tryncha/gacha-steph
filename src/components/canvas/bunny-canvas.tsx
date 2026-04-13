@@ -9,14 +9,14 @@ import { useBunnyAnimation } from '@/src/hooks/use-model-animation';
 import { useGacha } from '@/src/context/gacha-context';
 
 const BunnyModel = () => {
-  const { prize } = useGacha();
+  const { winner } = useGacha();
 
-  const { scene } = useGLTF(`/renders/bunnies/${prize}.glb`);
+  const { scene } = useGLTF(`/renders/bunnies/${winner}.glb`);
   const bunnyRef = useRef<THREE.Group>(null);
 
   useBunnyAnimation(bunnyRef);
 
-  if (!prize) return;
+  if (!winner) return;
   return (
     <primitive
       ref={bunnyRef}
