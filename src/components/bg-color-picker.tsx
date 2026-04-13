@@ -2,6 +2,7 @@
 
 import { Info } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
+import { kiwiSoda } from '../fonts/fonts';
 
 const BgColorPicker = () => {
   const inputId = useId();
@@ -15,11 +16,11 @@ const BgColorPicker = () => {
   return (
     <div className="absolute right-0 bottom-0 z-20 m-1 flex items-center gap-1 rounded-sm">
       {isHovering && (
-        <div className="absolute right-0.5 bottom-8 z-20 flex w-xl flex-col gap-2 rounded-xl bg-[#d0d995] p-2 text-center">
-          <p className="font-bold text-[#b8555b]">
-            ¡Si obtienes el producto especial Bunny Hunter Fantasy, ganas todos los tesoros del cofre PREY MODE!
-          </p>
-          <p className="font-bold text-[#b8555b]">Los tesoros no se repiten; se garantizan todos en ? intentos.</p>
+        <div
+          className={`${kiwiSoda.className} absolute right-0.5 bottom-8 z-20 flex w-2xl flex-col gap-2 rounded-xl bg-[#d0d995] p-2 text-center text-2xl font-medium text-[#b8555b]`}
+        >
+          <p>¡Si obtienes el producto especial Bunny Hunter Fantasy, ganas todos los tesoros del cofre PREY MODE!</p>
+          <p>Los tesoros no se repiten; se garantizan todos en ? intentos.</p>
         </div>
       )}
       <Info
