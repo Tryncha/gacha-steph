@@ -1,18 +1,34 @@
 import * as THREE from 'three';
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { BUNNY_OSCILLATION, prizes } from '../lib/constants';
+import { BUNNY_OSCILLATION, INITIAL_POSITION, prizes } from '../lib/constants';
 
 export function useGachaAnimation(
   activeBox: string,
   usedBoxes: string[],
+  isError: boolean,
   scene: THREE.Group<THREE.Object3DEventMap>,
   ref: RefObject<THREE.Group<THREE.Object3DEventMap> | null>
 ) {
-  useFrame(({ pointer }) => {
+  const shakeStart = useRef<number | null>(null);
+  const SHAKE_DURATION = 0.5;
+
+  useFrame(({ pointer, clock }) => {
     if (!ref.current) return;
     ref.current.rotation.y = pointer.x * 0.01;
     ref.current.rotation.x = -pointer.y * 0.01;
+
+    if (isError) shakeStart.current = clock.elapsedTime;
+    if (shakeStart.current !== null) {
+      const elapsedTime = clock.elapsedTime - shakeStart.current;
+      if (elapsedTime < SHAKE_DURATION) {
+        const intensity = 0.1 * (1 - elapsedTime / SHAKE_DURATION);
+        ref.current.position.x = INITIAL_POSITION.X + Math.sin(clock.elapsedTime * 40) * intensity;
+      } else {
+        ref.current.position.x = INITIAL_POSITION.X;
+        shakeStart.current = null;
+      }
+    }
   });
 
   useEffect(() => {

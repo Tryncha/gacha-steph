@@ -6,16 +6,15 @@ import { Canvas, CanvasProps } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment } from '@react-three/drei';
 import { useGachaAnimation } from '../../hooks/use-model-animation';
 import { useGacha } from '../../context/gacha-context';
-import { WISH_BUTTON_ID, WISH_STAR_COST } from '../../lib/constants';
+import { INITIAL_POSITION, WISH_BUTTON_ID, WISH_STAR_COST } from '../../lib/constants';
 import Loader from '../loader';
 
 const GachaModel = () => {
   const { scene } = useGLTF('/renders/gacha-render.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
-  const { stars, spendStars, activeBox, wish, usedBoxes, isWishing } = useGacha();
-
-  useGachaAnimation(activeBox, usedBoxes, scene, gachaRef);
+  const { stars, spendStars, activeBox, wish, usedBoxes, isWishing, isError, triggerError } = useGacha();
+  useGachaAnimation(activeBox, usedBoxes, isError, scene, gachaRef);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleClick(e: any) {
@@ -29,7 +28,7 @@ const GachaModel = () => {
         spendStars(WISH_STAR_COST);
         wish();
       } else {
-        console.log('Not enough stars :c');
+        triggerError();
       }
     }
   }
@@ -39,7 +38,7 @@ const GachaModel = () => {
       ref={gachaRef}
       object={scene}
       onClick={handleClick}
-      position={[2, -2.5, 2]}
+      position={[INITIAL_POSITION.X, INITIAL_POSITION.Y, INITIAL_POSITION.Z]}
       scale={1}
     />
   );

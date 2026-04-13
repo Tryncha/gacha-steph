@@ -13,6 +13,8 @@ interface GachaContextType {
   activeBox: string;
   usedBoxes: string[];
   isWishing: boolean;
+  isError: boolean;
+  triggerError: () => void;
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -29,11 +31,16 @@ export function useGacha() {
 
 export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [stars, setStars] = useState(WISH_STAR_COST * 3);
-
   const [activeBox, setActiveBox] = useState('');
   const [usedBoxes, setUsedBoxes] = useState<string[]>([]);
   const [winner, setWinner] = useState('');
   const [isWishing, setIsWishing] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  function triggerError() {
+    setIsError(true);
+    setTimeout(() => setIsError(false), 600);
+  }
 
   function addStars(quantity: number) {
     if (stars + quantity > MAX_STARS) {
@@ -113,7 +120,19 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <GachaContext.Provider
-      value={{ stars, winner, addStars, setWinner, spendStars, wish, activeBox, usedBoxes, isWishing }}
+      value={{
+        stars,
+        winner,
+        addStars,
+        setWinner,
+        spendStars,
+        wish,
+        activeBox,
+        usedBoxes,
+        isWishing,
+        isError,
+        triggerError
+      }}
     >
       {children}
     </GachaContext.Provider>

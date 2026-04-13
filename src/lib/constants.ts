@@ -75,3 +75,6 @@ export const BUNNY_OSCILLATION = {
   Y: { SPEED: 2, INTENSITY: 0.05 },
   Z: { SPEED: 2, INTENSITY: 0.05 }
 };
+
+// Gacha
+export const INITIAL_POSITION = { X: 2, Y: -2.5, Z: 2 };
