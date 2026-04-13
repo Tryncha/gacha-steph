@@ -13,7 +13,7 @@ const GachaModel = () => {
   const { scene } = useGLTF('/renders/gacha-render.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
-  const { stars, spendStars, activeBox, wish, usedBoxes } = useGacha();
+  const { stars, spendStars, activeBox, wish, usedBoxes, isWishing } = useGacha();
 
   useGachaAnimation(activeBox, usedBoxes, scene, gachaRef);
 
@@ -24,6 +24,8 @@ const GachaModel = () => {
 
     if (e.object.name === WISH_BUTTON_ID) {
       if (stars >= WISH_STAR_COST) {
+        if (isWishing) return;
+
         spendStars(WISH_STAR_COST);
         wish();
       } else {

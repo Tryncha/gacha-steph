@@ -20,18 +20,11 @@ export function useGachaAnimation(
       if (child instanceof THREE.Mesh) {
         for (let i = 0; i < prizes.length; i++) {
           if (child.name === prizes[i].boxId) {
-            // Active box
             if (activeBox === child.name) {
               child.material.emissive = new THREE.Color('#ffffff');
               child.material.emissiveIntensity = 0.18;
-            } else {
-              child.material.emissive = new THREE.Color('#000000');
-              child.material.emissiveIntensity = 0;
-            }
-
-            // Used boxes
-            if (usedBoxes.includes(child.name)) {
-              child.material.emissive = new THREE.Color('#ff0000');
+            } else if (usedBoxes.includes(child.name)) {
+              child.material.emissive = new THREE.Color('#c9e880');
               child.material.emissiveIntensity = 0.18;
             } else {
               child.material.emissive = new THREE.Color('#000000');

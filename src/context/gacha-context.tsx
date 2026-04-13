@@ -12,6 +12,7 @@ interface GachaContextType {
   wish: () => void;
   activeBox: string;
   usedBoxes: string[];
+  isWishing: boolean;
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -32,6 +33,7 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeBox, setActiveBox] = useState('');
   const [usedBoxes, setUsedBoxes] = useState<string[]>([]);
   const [winner, setWinner] = useState('');
+  const [isWishing, setIsWishing] = useState(false);
 
   function addStars(quantity: number) {
     if (stars + quantity > MAX_STARS) {
@@ -67,14 +69,12 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   function wish() {
-    console.log('Button should be disabled!');
+    if (isWishing) return;
+    setIsWishing(true);
     clearBoxes();
 
     const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
     const winnerIdx = pickWeighted(availableIdxs);
-
-    console.log('availableIdxs: ', availableIdxs);
-    console.log('winnerIdx: ', winnerIdx);
 
     let speed = 80;
     let elapsedTime = 0;
@@ -106,15 +106,15 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
 
   function finish(winnerIdx: number) {
     clearBoxes();
+    setIsWishing(false);
     setUsedBoxes(usedBoxes.concat(prizes[winnerIdx].boxId));
-    setWinner(prizes[winnerIdx].prizeId);
+    setTimeout(() => setWinner(prizes[winnerIdx].prizeId), 360);
   }
 
-  console.log('activeBox: ', activeBox);
-  console.log('winner: ', winner);
-
   return (
-    <GachaContext.Provider value={{ stars, winner, addStars, setWinner, spendStars, wish, activeBox, usedBoxes }}>
+    <GachaContext.Provider
+      value={{ stars, winner, addStars, setWinner, spendStars, wish, activeBox, usedBoxes, isWishing }}
+    >
       {children}
     </GachaContext.Provider>
   );
