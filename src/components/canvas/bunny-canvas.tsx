@@ -1,11 +1,10 @@
 'use client';
 
 import * as THREE from 'three';
-import { useRef } from 'react';
-import { Canvas, CanvasProps } from '@react-three/fiber';
+import { CSSProperties, useRef } from 'react';
+import { CameraProps, Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment } from '@react-three/drei';
 import { useBunnyAnimation } from '@/src/hooks/use-model-animation';
-import { useGacha } from '@/src/context/gacha-context';
 import { prizes } from '@/src/lib/constants';
 
 // Preloading of all models - just to evade a loader
@@ -21,22 +20,20 @@ const BunnyModel = ({ prizeId }: { prizeId: string }) => {
     <primitive
       ref={bunnyRef}
       object={scene}
-      position={prizeId === 'especial' ? [0, 0, -4.5] : [0, -2.5, -5]}
+      position={[0, 1.5, 0]}
       scale={prizeId === 'especial' ? 1.1 : 2.4}
     />
   );
 };
 
-const BunnyCanvas = (props: CanvasProps) => {
-  const { winner } = useGacha();
-
+const BunnyCanvas = ({ camera, style, prizeId }: { prizeId: string; camera?: CameraProps; style?: CSSProperties }) => {
   return (
     <Canvas
-      camera={props.camera}
-      style={props.style}
+      camera={camera}
+      style={style}
     >
       {/* No need for <Suspense> since all models are preloaded */}
-      {winner && <BunnyModel prizeId={winner} />}
+      <BunnyModel prizeId={prizeId} />
       <Environment files="/lighting/docklands_01_4k.exr" />
       <OrbitControls
         enablePan={false}

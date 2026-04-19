@@ -13,7 +13,7 @@ const StarsInfo = () => {
       </span>
       <button
         onClick={() => addStars(70)}
-        className={`${kiwiSoda.className} flex items-center justify-center rounded-md bg-[#d0d995] px-2 text-xl text-[#b8555b] transition-colors hover:cursor-pointer hover:bg-rose-300`}
+        className={`${kiwiSoda.className} flex items-center justify-center rounded-md bg-[#d0d995] px-2 text-xl text-[#b8555b] transition-colors hover:cursor-pointer hover:bg-[#d5e27f]`}
       >
         Add stars
       </button>
