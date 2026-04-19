@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext, useRef, useState } from 'react';
 import { MAX_STARS, prizes, WISH_STAR_COST } from '../lib/constants';
 
 interface GachaContextType {
@@ -36,6 +36,20 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [winner, setWinner] = useState('');
   const [isWishing, setIsWishing] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const usedBoxesRef = useRef<string[]>([]);
+
+  function addUsedBox(boxId: string) {
+    const updated = usedBoxesRef.current.concat(boxId);
+    usedBoxesRef.current = updated;
+    setUsedBoxes(updated);
+  }
+
+  function addAllUsedBoxes() {
+    const all = prizes.map((p) => p.boxId);
+    usedBoxesRef.current = all;
+    setUsedBoxes(all);
+  }
 
   function triggerError() {
     setIsError(true);
@@ -80,7 +94,10 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     setIsWishing(true);
     clearBoxes();
 
-    const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
+    const availableIdxs = prizes
+      .map((_, idx) => idx)
+      .filter((idx) => !usedBoxesRef.current.includes(prizes[idx].boxId));
+
     const winnerIdx = pickWeighted(availableIdxs);
 
     let speed = 80;
@@ -114,7 +131,15 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   function finish(winnerIdx: number) {
     clearBoxes();
     setIsWishing(false);
-    setUsedBoxes(usedBoxes.concat(prizes[winnerIdx].boxId));
+
+    const isSpecialPrize = prizes[winnerIdx].prizeId === 'especial';
+
+    if (isSpecialPrize) {
+      addAllUsedBoxes();
+    } else {
+      addUsedBox(prizes[winnerIdx].boxId);
+    }
+
     setTimeout(() => setWinner(prizes[winnerIdx].prizeId), 360);
   }
 

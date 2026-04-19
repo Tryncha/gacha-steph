@@ -6,7 +6,7 @@ import { Canvas, CanvasProps } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment } from '@react-three/drei';
 import { useGachaAnimation } from '../../hooks/use-model-animation';
 import { useGacha } from '../../context/gacha-context';
-import { INITIAL_POSITION, WISH_BUTTON_ID, WISH_STAR_COST } from '../../lib/constants';
+import { INITIAL_POSITION, prizes, WISH_BUTTON_ID, WISH_STAR_COST } from '../../lib/constants';
 import Loader from '../loader';
 
 const GachaModel = () => {
@@ -23,6 +23,7 @@ const GachaModel = () => {
 
     if (e.object.name === WISH_BUTTON_ID) {
       if (isWishing) return;
+      if (usedBoxes.length >= prizes.length) return;
       if (stars >= WISH_STAR_COST) {
         spendStars(WISH_STAR_COST);
         wish();

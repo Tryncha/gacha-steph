@@ -32,6 +32,8 @@ export function useGachaAnimation(
   });
 
   useEffect(() => {
+    const gameOver = usedBoxes.length >= prizes.length;
+
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         for (let i = 0; i < prizes.length; i++) {
@@ -39,7 +41,7 @@ export function useGachaAnimation(
             if (activeBox === child.name) {
               child.material.emissive = new THREE.Color('#ffffff');
               child.material.emissiveIntensity = 0.18;
-            } else if (usedBoxes.includes(child.name)) {
+            } else if (usedBoxes.includes(child.name) || gameOver) {
               child.material.emissive = new THREE.Color('#c9e880');
               child.material.emissiveIntensity = 0.18;
             } else {
