@@ -21,7 +21,7 @@ const BunnyModel = ({ prizeId }: { prizeId: string }) => {
     <primitive
       ref={bunnyRef}
       object={scene}
-      position={[0, 0, 0]}
+      position={[0, -2.5, -5]}
       scale={prizeId === 'especial' ? 1.1 : 2.4}
     />
   );

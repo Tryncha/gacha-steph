@@ -9,12 +9,12 @@ interface GachaContextType {
   spendStars: (quantity: number) => void;
   winner: string;
   setWinner: Dispatch<SetStateAction<string>>;
-  wish: () => void;
   activeBox: string;
   usedBoxes: string[];
-  isWishing: boolean;
   isError: boolean;
   triggerError: () => void;
+  wish: () => void;
+  isWishing: boolean;
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -122,16 +122,16 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     <GachaContext.Provider
       value={{
         stars,
-        winner,
         addStars,
-        setWinner,
         spendStars,
-        wish,
+        winner,
+        setWinner,
         activeBox,
         usedBoxes,
-        isWishing,
         isError,
-        triggerError
+        triggerError,
+        wish,
+        isWishing
       }}
     >
       {children}

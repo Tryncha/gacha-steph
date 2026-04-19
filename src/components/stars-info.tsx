@@ -1,19 +1,19 @@
 'use client';
 
 import { useGacha } from '../context/gacha-context';
-import { berkyFont } from '../lib/fonts';
+import { kiwiSoda } from '../lib/fonts';
 
 const StarsInfo = () => {
   const { stars, addStars } = useGacha();
 
   return (
     <div className="absolute top-2 right-2 z-10 flex w-28 flex-col gap-2">
-      <span className={`${berkyFont.className} rounded-md bg-rose-200 p-2 pb-1 text-center text-5xl text-yellow-700`}>
+      <span className={`${kiwiSoda.className} rounded-md bg-[#d0d995] p-2 pb-1 text-center text-5xl text-[#b8555b]`}>
         {stars}
       </span>
       <button
         onClick={() => addStars(70)}
-        className={`${berkyFont.className} flex items-center justify-center rounded-md border border-rose-900 bg-rose-200 px-2 text-xl text-yellow-900 transition-colors hover:cursor-pointer hover:bg-rose-300`}
+        className={`${kiwiSoda.className} flex items-center justify-center rounded-md bg-[#d0d995] px-2 text-xl text-[#b8555b] transition-colors hover:cursor-pointer hover:bg-rose-300`}
       >
         Add stars
       </button>

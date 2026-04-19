@@ -4,7 +4,7 @@ import './globals.css';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body>
+      <body className="bg-[#431164]">
         <GachaProvider>{children}</GachaProvider>
       </body>
     </html>

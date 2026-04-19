@@ -2,12 +2,12 @@
 
 import FursonaCanvas from '../components/canvas/fursona-canvas';
 import GachaCanvas from '../components/canvas/gacha-canvas';
-import GachaMisc from '../components/gacha-misc';
 import StarsInfo from '../components/stars-info';
 import { useGacha } from '../context/gacha-context';
 import BunnyCanvas from '../components/canvas/bunny-canvas';
 import { useEffect } from 'react';
 import { checkTotalProb } from '../lib/utils';
+import GachaInfo from '../components/gacha-info';
 
 const HomePage = () => {
   const { winner, setWinner, isError } = useGacha();
@@ -23,7 +23,9 @@ const HomePage = () => {
       <div
         className={`${isError ? 'opacity-100' : 'opacity-0'} pointer-events-none absolute inset-0 z-30 bg-red-500/30 transition-opacity duration-300`}
       />
+
       <StarsInfo />
+
       <FursonaCanvas
         camera={{ position: [600, 100, 0], fov: 45 }}
         style={{ flex: 1, zIndex: 0 }}
@@ -55,9 +57,11 @@ const HomePage = () => {
         />
       </section>
 
-      <GachaMisc />
+      <GachaInfo />
     </main>
   );
 };
 
 export default HomePage;
+
+// Intentar centrar el canvas del conejito - no funcionaa!!

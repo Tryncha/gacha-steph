@@ -26,7 +26,7 @@ const FursonaCanvas = (props: CanvasProps) => {
       camera={props.camera}
       style={props.style}
     >
-      <Suspense fallback={<Loader loadingText="CARGANDO FURSONA..." />}>
+      <Suspense fallback={<Loader loadingText="CARGANDO MODELO..." />}>
         <FursonaModel />
         <Environment files="/lighting/docklands_01_4k.exr" />
       </Suspense>
