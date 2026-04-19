@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, Dispatch, SetStateAction, useContext, useRef, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
 import { MAX_STARS, prizes, WISH_STAR_COST } from '../lib/constants';
 
 interface GachaContextType {
@@ -15,6 +15,7 @@ interface GachaContextType {
   triggerError: () => void;
   wish: () => void;
   isWishing: boolean;
+  isGameOver: boolean;
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -36,20 +37,7 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [winner, setWinner] = useState('');
   const [isWishing, setIsWishing] = useState(false);
   const [isError, setIsError] = useState(false);
-
-  const usedBoxesRef = useRef<string[]>([]);
-
-  function addUsedBox(boxId: string) {
-    const updated = usedBoxesRef.current.concat(boxId);
-    usedBoxesRef.current = updated;
-    setUsedBoxes(updated);
-  }
-
-  function addAllUsedBoxes() {
-    const all = prizes.map((p) => p.boxId);
-    usedBoxesRef.current = all;
-    setUsedBoxes(all);
-  }
+  const [isGameOver, setIsGameOver] = useState(false);
 
   function triggerError() {
     setIsError(true);
@@ -94,10 +82,7 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     setIsWishing(true);
     clearBoxes();
 
-    const availableIdxs = prizes
-      .map((_, idx) => idx)
-      .filter((idx) => !usedBoxesRef.current.includes(prizes[idx].boxId));
-
+    const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
     const winnerIdx = pickWeighted(availableIdxs);
 
     let speed = 80;
@@ -108,6 +93,11 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
 
     function step() {
       clearBoxes();
+
+      if (availableIdxs.length === 1) {
+        setTimeout(() => finish(winnerIdx), 180);
+        return;
+      }
 
       // Pick random available index for animation (avoid repeating same in flash)
       const candidateIdxs = availableIdxs.filter((idx) => idx !== currentIdx);
@@ -135,9 +125,10 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
     const isSpecialPrize = prizes[winnerIdx].prizeId === 'especial';
 
     if (isSpecialPrize) {
-      addAllUsedBoxes();
+      setUsedBoxes(prizes.map((p) => p.boxId));
+      setIsGameOver(true);
     } else {
-      addUsedBox(prizes[winnerIdx].boxId);
+      setUsedBoxes((prev) => prev.concat(prizes[winnerIdx].boxId));
     }
 
     setTimeout(() => setWinner(prizes[winnerIdx].prizeId), 360);
@@ -156,7 +147,8 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
         isError,
         triggerError,
         wish,
-        isWishing
+        isWishing,
+        isGameOver
       }}
     >
       {children}

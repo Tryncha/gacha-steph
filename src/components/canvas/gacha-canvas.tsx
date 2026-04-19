@@ -13,8 +13,8 @@ const GachaModel = () => {
   const { scene } = useGLTF('/renders/gacha-render.glb');
   const gachaRef = useRef<THREE.Group>(null);
 
-  const { stars, spendStars, activeBox, wish, usedBoxes, isWishing, isError, triggerError } = useGacha();
-  useGachaAnimation(activeBox, usedBoxes, isError, scene, gachaRef);
+  const { stars, spendStars, activeBox, wish, usedBoxes, isWishing, isError, triggerError, isGameOver } = useGacha();
+  useGachaAnimation(activeBox, usedBoxes, isError, isGameOver, scene, gachaRef);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleClick(e: any) {

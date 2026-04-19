@@ -10,7 +10,7 @@ import { checkTotalProb } from '../lib/utils';
 import GachaInfo from '../components/gacha-info';
 
 const HomePage = () => {
-  const { winner, setWinner, isError } = useGacha();
+  const { winner, setWinner, isError, isGameOver } = useGacha();
 
   useEffect(() => {
     checkTotalProb();
@@ -63,5 +63,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-// Intentar centrar el canvas del conejito - no funcionaa!!

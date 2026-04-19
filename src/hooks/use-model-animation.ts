@@ -7,6 +7,7 @@ export function useGachaAnimation(
   activeBox: string,
   usedBoxes: string[],
   isError: boolean,
+  isGameOver: boolean,
   scene: THREE.Group<THREE.Object3DEventMap>,
   ref: RefObject<THREE.Group<THREE.Object3DEventMap> | null>
 ) {
@@ -32,8 +33,6 @@ export function useGachaAnimation(
   });
 
   useEffect(() => {
-    const gameOver = usedBoxes.length >= prizes.length;
-
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         for (let i = 0; i < prizes.length; i++) {
@@ -41,7 +40,7 @@ export function useGachaAnimation(
             if (activeBox === child.name) {
               child.material.emissive = new THREE.Color('#ffffff');
               child.material.emissiveIntensity = 0.18;
-            } else if (usedBoxes.includes(child.name) || gameOver) {
+            } else if (usedBoxes.includes(child.name) || isGameOver) {
               child.material.emissive = new THREE.Color('#c9e880');
               child.material.emissiveIntensity = 0.18;
             } else {
@@ -54,7 +53,7 @@ export function useGachaAnimation(
         }
       }
     });
-  }, [scene, activeBox, usedBoxes]);
+  }, [scene, activeBox, usedBoxes, isGameOver]);
 }
 
 export function useBunnyAnimation(bunnyRef: RefObject<THREE.Group<THREE.Object3DEventMap> | null>) {

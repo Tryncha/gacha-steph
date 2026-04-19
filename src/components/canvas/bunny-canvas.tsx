@@ -35,7 +35,7 @@ const BunnyCanvas = (props: CanvasProps) => {
       camera={props.camera}
       style={props.style}
     >
-      {/* No need for <Suspense> given that all models are preloaded */}
+      {/* No need for <Suspense> since all models are preloaded */}
       {winner && <BunnyModel prizeId={winner} />}
       <Environment files="/lighting/docklands_01_4k.exr" />
       <OrbitControls
