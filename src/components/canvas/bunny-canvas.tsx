@@ -26,7 +26,9 @@ const BunnyModel = ({ prizeId }: { prizeId: string }) => {
   );
 };
 
-const BunnyCanvas = ({ camera, style, prizeId }: { prizeId: string; camera?: CameraProps; style?: CSSProperties }) => {
+const BunnyCanvas = ({ prizeId, camera, style }: { prizeId: string; camera?: CameraProps; style?: CSSProperties }) => {
+  if (!prizeId) return;
+
   return (
     <Canvas
       camera={camera}

@@ -16,6 +16,8 @@ interface GachaContextType {
   wish: () => void;
   isWishing: boolean;
   isGameOver: boolean;
+  showPrize: boolean;
+  setShowPrize: Dispatch<SetStateAction<boolean>>;
 }
 
 const GachaContext = createContext<GachaContextType | null>(null);
@@ -38,6 +40,7 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   const [isWishing, setIsWishing] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [showPrize, setShowPrize] = useState(false);
 
   function triggerError() {
     setIsError(true);
@@ -59,7 +62,6 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   // Game functions
   function clearBoxes() {
     setActiveBox('');
-    setWinner('');
   }
 
   function pickWeighted(availableIdxs: number[]) {
@@ -80,6 +82,7 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
   function wish() {
     if (isWishing) return;
     setIsWishing(true);
+    setShowPrize(false);
     clearBoxes();
 
     const availableIdxs = prizes.map((_, idx) => idx).filter((idx) => !usedBoxes.includes(prizes[idx].boxId));
@@ -131,7 +134,10 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
       setUsedBoxes((prev) => prev.concat(prizes[winnerIdx].boxId));
     }
 
-    setTimeout(() => setWinner(prizes[winnerIdx].prizeId), 360);
+    setTimeout(() => {
+      setWinner(prizes[winnerIdx].prizeId);
+      setShowPrize(true);
+    }, 360);
   }
 
   return (
@@ -148,7 +154,9 @@ export const GachaProvider = ({ children }: { children: React.ReactNode }) => {
         triggerError,
         wish,
         isWishing,
-        isGameOver
+        isGameOver,
+        showPrize,
+        setShowPrize
       }}
     >
       {children}
