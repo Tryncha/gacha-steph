@@ -72,13 +72,13 @@ const HomePage = () => {
       {showFinalMessage && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
           <div
-            className={`${kiwiSoda.className} flex w-sm flex-col gap-2 rounded-xl bg-[#ecf89c] p-4 text-center text-3xl text-[#b8555b]`}
+            className={`${kiwiSoda.className} flex w-sm flex-col gap-2 rounded-xl bg-[#e7f0ac] p-4 text-center text-3xl text-[#b8555b]`}
           >
             <span>¡Felicitaciones!</span>
             <span>¡Has conseguido todos los tesoros del cofre PREY MODE!</span>
             <button
               onClick={() => location.reload()}
-              className="rounded-xl border pt-2 transition-colors hover:cursor-pointer hover:bg-[#e6f777]"
+              className="rounded-xl border pt-2 transition-colors hover:cursor-pointer hover:bg-[#ecf89c]"
             >
               Volver a jugar
             </button>

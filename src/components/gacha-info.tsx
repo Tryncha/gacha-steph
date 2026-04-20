@@ -10,7 +10,7 @@ const Tooltip = ({ children, isHovering }: { children: React.ReactNode; isHoveri
 
   return (
     <div
-      className={`${kiwiSoda.className} absolute right-12 bottom-0 z-20 flex w-2xl flex-col gap-2 rounded-xl bg-[#ecf89c] p-4 text-center text-2xl font-medium text-[#b8555b]`}
+      className={`${kiwiSoda.className} absolute right-12 bottom-0 z-20 flex w-2xl flex-col gap-2 rounded-xl bg-[#e7f0ac] p-4 text-center text-2xl font-medium text-[#b8555b]`}
     >
       {children}
     </div>
