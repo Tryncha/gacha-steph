@@ -7,8 +7,8 @@ import { kiwiSoda } from '../lib/fonts';
 const StarsInfo = () => {
   const { stars, addStars } = useGacha();
 
-  const [bgColor, setBgColor] = useState('#e7f0ac');
-  const [textColor, setTextColor] = useState('#b8555b');
+  const [bgColor, setBgColor] = useState('#FAFDDB');
+  const [textColor, setTextColor] = useState('#FFD3D5');
 
   return (
     <div className="absolute top-2 right-2 z-10 flex w-28 flex-col gap-2">
