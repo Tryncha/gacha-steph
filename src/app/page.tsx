@@ -72,7 +72,7 @@ const HomePage = () => {
       {showFinalMessage && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
           <div
-            className={`${kiwiSoda.className} flex w-sm flex-col gap-2 rounded-xl bg-[#e7f0ac] p-4 text-center text-3xl text-[#b8555b]`}
+            className={`${kiwiSoda.className} flex w-sm flex-col gap-2 rounded-xl bg-[#fafddb] p-4 text-center text-3xl text-[#ffa8ad]`}
           >
             <span>¡Felicitaciones!</span>
             <span>¡Has conseguido todos los tesoros del cofre PREY MODE!</span>

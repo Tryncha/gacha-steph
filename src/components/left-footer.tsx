@@ -1,13 +1,13 @@
 const LeftFooter = () => {
   return (
-    <div className="absolute bottom-0 left-0 z-10 flex flex-col rounded-tr-xl bg-[#e7f0ac] px-2 py-0.5 text-xs text-rose-950 italic">
+    <div className="absolute bottom-0 left-0 z-10 flex flex-col rounded-tr-xl bg-[#fafddb] px-2 py-0.5 text-xs text-[#d87278] italic">
       <span>
         Código hecho por{' '}
         <a
           href="https://github.com/Tryncha"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-all hover:font-semibold hover:text-rose-700"
+          className="transition-all hover:font-semibold hover:text-[#be363f]"
         >
           Tryncha
         </a>
@@ -18,7 +18,7 @@ const LeftFooter = () => {
           href="https://www.instagram.com/stephaniaayalag"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-all hover:font-semibold hover:text-rose-700"
+          className="transition-all hover:font-semibold hover:text-[#be363f]"
         >
           stephaniaayalag
         </a>

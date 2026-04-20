@@ -1,5 +1,5 @@
 @import 'tailwindcss';
 
 * {
-  cursor: url('/unnamed.png'), auto;
+  cursor: none !important;
 }
